@@ -17,6 +17,12 @@ const Header = () => {
             key: 'selection'
         }
     ]);
+    const [openOpt, setOpenOpt] = useState(false);
+    const [opt, setOpt] = useState({
+        adult: 1,
+        children: 0,
+        room: 1,
+    })
 
     return (
         <div className='header'>
@@ -84,7 +90,39 @@ const Header = () => {
 
                     <div className="headerSearchItem">
                         <FontAwesomeIcon icon={faPerson} className='headerIcon' />
-                        <span className='headerSearchText'>2 Adult 0 Children 1 Room</span>
+                        <span className='headerSearchText'>
+                            {`${opt.adult} Adult - ${opt.children} Children - ${opt.room} Room`}
+                        </span>
+                        <div className="options">
+                            <div className="optionItem">
+                                <span className="optionText">Adult</span>
+                                <div className="optionCounter">
+                                    <button className="optionCounterButton">-</button>
+                                    <span className="optionCounterNumber">1</span>
+                                    <button className="optionCounterButton">+</button>
+                                </div>
+                            </div>
+
+                            <div className="optionItem">
+                                <span className="optionText">Children</span>
+                                <div className="optionCounter">
+                                    <button className="optionCounterButton">-</button>
+                                    <span className="optionCounterNumber">1</span>
+                                    <button className="optionCounterButton">+</button>
+                                </div>
+                            </div>
+
+                            <div className="optionItem">
+                                <span className="optionText">Room</span>
+                                <div className="optionCounter">
+                                    <div className="optionCounter">
+                                        <button className="optionCounterButton">-</button>
+                                        <span className="optionCounterNumber">1</span>
+                                        <button className="optionCounterButton">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="headerSearchItem">
