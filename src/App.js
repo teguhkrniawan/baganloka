@@ -6,6 +6,8 @@ import {
 import Home from './pages/home/Home';
 import List from './pages/list/List';
 import Hotel from './pages/hotel/Hotel';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
 function App() {
   return (
