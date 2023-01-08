@@ -1,7 +1,11 @@
 import React from 'react';
+import useFetch from '../../hooks/useFetch';
 import './featured.scss'
 
 const Featured = () => {
+
+  const { data, loading, error } = useFetch('')
+
   return (
     <div className='featured'>
       <div className="featuredItem">
