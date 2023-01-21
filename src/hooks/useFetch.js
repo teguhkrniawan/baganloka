@@ -8,6 +8,7 @@ const useFetch = (url) => {
     const [error, setError] = useState(false);
 
     // use effect
+    // kalau mau live masukkan ketika user ubah di textfiled tambahkan [url]
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true)
@@ -21,7 +22,7 @@ const useFetch = (url) => {
             }
         }
         fetchData()
-    }, [url])
+    }, [])
 
     // refetch
     const refetch = async () => {
@@ -29,10 +30,11 @@ const useFetch = (url) => {
         try {
             const res = await axios.get(url)
             setData(res.data)
+            setLoading(false)
         } catch (error) {
             setError(error)
+            setLoading(false)
         }
-        setLoading(false)
     }
 
     return {
