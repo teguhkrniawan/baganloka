@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Header from '../../components/header/Header';
 import Navbar from './../../components/navbar/Navbar';
 import MailList from './../../components/mailList/MailList';
@@ -12,11 +12,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import './hotel.scss';
 import useFetch from './../../hooks/useFetch';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { SearchContext } from '../../context/SearchContext';
+import { useEffect } from 'react';
 
 const Hotel = () => {
 
   const location = useLocation();
+  const navigate = useNavigate();
+
   // get id hotel
   const idHotel = location.pathname.split('/')[2];
 
@@ -25,24 +29,10 @@ const Hotel = () => {
   const [navOpen, setNavOpen] = useState(true);
 
   const { loading, error, data } = useFetch(`/hotel/find/${idHotel}`)
+  const { dates, options } = useContext(SearchContext)
 
-  const handleOpen = (i) => {
-    setSlideNumber(i);
-    setOpen(true);
-    setNavOpen(false)
-  };
-
-  const handleMove = (direction) => {
-    let newSlideNumber;
-
-    if (direction === "l") {
-      newSlideNumber = slideNumber === 0 ? 5 : slideNumber - 1;
-    } else {
-      newSlideNumber = slideNumber === 5 ? 0 : slideNumber + 1;
-    }
-
-    setSlideNumber(newSlideNumber)
-  };
+  const [days, setDays] = useState(0)
+  const [room, setRoom] = useState(0)
 
   const photos = [
     {
@@ -64,6 +54,47 @@ const Hotel = () => {
       src: "https://cf.bstatic.com/xdata/images/hotel/max1280x900/261707389.jpg?k=52156673f9eb6d5d99d3eed9386491a0465ce6f3b995f005ac71abc192dd5827&o=&hp=1",
     },
   ];
+
+  // use effect
+  useEffect(() => {
+
+    // pengecekan date start dan akhir habis state
+    if (!dates || !options) {
+      navigate('/')
+      return
+    }
+
+    // function untuk menghitung selisih hari
+    const MILISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+
+    const dayDifference = (dateAkhir, dateStart) => {
+      const timeDiff = Math.abs(dateStart.getTime() - dateAkhir.getTime());
+      const diffDays = Math.ceil(timeDiff / MILISECONDS_PER_DAY);
+      return diffDays
+    }
+
+    setDays(dayDifference(dates[0].endDate, dates[0].startDate))
+    setRoom(options.room)
+
+  }, [dates, options, location])
+
+  const handleOpen = (i) => {
+    setSlideNumber(i);
+    setOpen(true);
+    setNavOpen(false)
+  };
+
+  const handleMove = (direction) => {
+    let newSlideNumber;
+
+    if (direction === "l") {
+      newSlideNumber = slideNumber === 0 ? 5 : slideNumber - 1;
+    } else {
+      newSlideNumber = slideNumber === 5 ? 0 : slideNumber + 1;
+    }
+
+    setSlideNumber(newSlideNumber)
+  };
 
   return (
     <div>
@@ -157,13 +188,13 @@ const Hotel = () => {
                   </p>
                 </div>
                 <div className="hotelDetailsPrice">
-                  <h1>Perfect for a 9-night stay!</h1>
+                  <h1>Perfect for a {days}-night stay!</h1>
                   <span>
                     Located in the real heart of Krakow, this property has an
                     excellent location score of 9.8!
                   </span>
                   <h2>
-                    <b>$945</b> (9 nights)
+                    <b>${ days * room * data.cheapestPrice }</b> ({days} nights)
                   </h2>
                   <button>Reserve or Book Now!</button>
                 </div>

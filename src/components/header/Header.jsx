@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './header.scss';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBed, faPlane, faCar, faShip, faMotorcycle, faCalendarDays, faPerson } from "@fortawesome/free-solid-svg-icons";
@@ -7,6 +7,7 @@ import { DateRange } from 'react-date-range';
 // import 'react-date-range/dist/theme/default.css'; // theme css file
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { SearchContext } from './../../context/SearchContext';
 
 const Header = ({ type }) => {
 
@@ -26,6 +27,7 @@ const Header = ({ type }) => {
         children: 0,
         room: 0
     })
+    const {dispatch} = useContext(SearchContext)
 
     // handle option pemilihan adult, room, dan child
     const handleOption = (name, operation) => {
@@ -39,9 +41,15 @@ const Header = ({ type }) => {
 
     // ketika btn search di klik
     const handleSearch = () => {
+        dispatch({
+            type: "NEW_SEARCH",
+            payload: {
+                destination, dates, opt
+            }
+        })
         navigate('/hotel', {
-            state : {
-                destination : destination,
+            state: {
+                destination: destination,
                 dates: dates,
                 option: opt
             }
